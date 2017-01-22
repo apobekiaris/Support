@@ -226,9 +226,11 @@ namespace BuildHelper {
             var references = document.Descendants().Where(IsXpandOrDXElement);
             foreach (XElement reference in references) {
                 var attribute = reference.Attribute("Include");
-
+                if (Regex.IsMatch(attribute.Value, "(DevExpress*)", RegexOptions.Singleline | RegexOptions.IgnoreCase))
+                    UpdateElementValue(reference, "Private", "False", file, document);
                 var value = Regex.Match(attribute.Value, "(Xpand.[^,]*)|(DevExpress.[^,]*)", RegexOptions.Singleline | RegexOptions.IgnoreCase).Value;
                 if (string.CompareOrdinal(attribute.Value, value) != 0) {
+                    
                     attribute.Value = value;
                     DocumentHelper.Save(document, file);
                 }
